@@ -1,5 +1,6 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { Auth, AuthInitializeConfig } from "./types";
+import { ReactNode, useEffect, useState } from "react";
+import { AuthInitializeConfig } from "./types";
+import { AuthContext, AuthContextProps } from "./useAuthContext";
 
 interface AuthProviderProps extends AuthInitializeConfig {
   children?: ReactNode;
@@ -14,21 +15,6 @@ interface AuthProviderProps extends AuthInitializeConfig {
    */
   onAuthChange?: AuthInitializeConfig["onAuthChange"];
 }
-type UnwrapPromise<P> = P extends Promise<infer R> ? R : P;
-type TokenSet = UnwrapPromise<AuthProviderProps["initialTokens"]>
-type UserData = Auth["currentUser"]
-interface AuthContextProps {
-  tokens?: TokenSet
-  user?: UserData
-  onAuthChange: ({ tokens, user}: { tokens:  NonNullable<TokenSet> | null, user: UserData }) => void
-}
-
-
-const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
-
-const useAuthContext = () => {
-  return useContext(AuthContext);
-};
 
 /**
  * Initializes the auth state and exposes it to the component-tree below.
@@ -38,12 +24,12 @@ const useAuthContext = () => {
  */
 function AuthProvider(props: AuthProviderProps): JSX.Element {
   const { initialTokens, onAuthChange: onTokensChange, ...otherProps } = props;
-  const [tokens, setTokens] = useState<UnwrapPromise<typeof initialTokens>>();
-  const [user, setUser] = useState<UserData>()
+  const [tokens, setTokens] = useState<AuthContextProps["tokens"]>();
+  const [user, setUser] = useState<AuthContextProps["user"]>();
 
   const onAuthChange: AuthContextProps["onAuthChange"] = ({ tokens, user }) => {
-    setTokens(tokens)
-    setUser(user)
+    setTokens(tokens);
+    setUser(user);
     onTokensChange?.(tokens);
   };
 
@@ -51,9 +37,9 @@ function AuthProvider(props: AuthProviderProps): JSX.Element {
     const getInitialTokens = async () => {
       const tokens = await initialTokens;
       setTokens(tokens);
-      
+
       if (!tokens) {
-        setUser(null)
+        setUser(null);
       }
     };
 
@@ -71,4 +57,4 @@ function AuthProvider(props: AuthProviderProps): JSX.Element {
   return <AuthContext.Provider value={value} {...otherProps} />;
 }
 
-export { AuthProvider, type AuthProviderProps, useAuthContext };
+export { AuthProvider, type AuthProviderProps };

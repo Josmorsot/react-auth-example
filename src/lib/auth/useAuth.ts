@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Auth } from "./types";
-import { useAuthContext } from "./AuthProvider";
 import { useApiFetcher } from "../api";
 import { useCallback, useEffect } from "react";
+import { useAuthContext } from "./useAuthContext";
 
 /**
  * Returns the current auth state. See {@link Auth} for more information on
@@ -49,9 +49,8 @@ function useAuth(): Auth {
     if (tokens && !user) {
       getUser(tokens.access).then((user) => { // TODO: Re-check why `defaultHeaders` is not working properly
         onAuthChange({ tokens, user })
-      }).catch((reason) => {
-        // TODO
-        console.error(reason)
+      }).catch(() => {
+        onAuthChange({ tokens: null, user: null })
       })
     }
   }, [getUser, tokens, user, onAuthChange]);
