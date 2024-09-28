@@ -16,12 +16,14 @@ import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
 import { useApiFetcher } from '@/lib/api'
 import { Match } from '@/lib/api-types'
+import useMatchesDownloader from '@/lib/downloads/useMatchesDownloader'
 
 export interface MatchesProps {
   onLogoutRequest?: () => void
 }
 
 export function Matches(props: MatchesProps) {
+  const { status, onDownload } = useMatchesDownloader()
   const { onLogoutRequest, ...otherProps } = props
   const [page, setPage] = useState<number>(0)
   const [size, setSize] = useState<number>(10)
@@ -44,6 +46,12 @@ export function Matches(props: MatchesProps) {
   const matches: Match[] = query.data.matches
   const total: number = query.data.total
 
+  const handleDownload = () => {
+    onDownload().catch(() => {
+      // TODO
+    })
+  }
+
   return (
     <Stack {...otherProps}>
       <Stack direction="row" marginBottom={2} justifyContent="space-between" alignItems="center">
@@ -51,6 +59,9 @@ export function Matches(props: MatchesProps) {
         <Stack direction="row" justifyContent="space-between">
           <Button size="small" onClick={onLogoutRequest}>Logout</Button>
         </Stack>
+      </Stack>
+      <Stack>
+        <Button onClick={handleDownload}>{status}</Button>
       </Stack>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="Matches">
