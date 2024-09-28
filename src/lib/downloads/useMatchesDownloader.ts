@@ -1,13 +1,26 @@
 import { useState } from "react";
 import { useApiFetcher } from "../api";
 import { Match } from "../api-types";
+import { downloadAsCsv } from "../api/utils";
 
 export enum DownloadStatus {
   Idle = "idle",
-  Calculating = "calculating",
   Pending = "pending",
   Ready = "ready",
   Failed = "failed",
+}
+
+const simplifyMatch = (match: Match) => {
+  const {startDate, endDate, ...otherMatchesProps} = match
+  return {
+    ...otherMatchesProps,
+    date: new Date(startDate.replace('Z','')).toLocaleDateString(),
+    start: new Date(startDate.replace('Z','')).toLocaleTimeString(),
+    end: new Date(endDate.replace('Z','')).toLocaleTimeString(),
+    teams: match.teams.map(team => {
+      return team.players.map(p => p.email)
+    })
+  }
 }
 
 function useMatchesDownloader() {
@@ -38,19 +51,6 @@ function useMatchesDownloader() {
     return data;
   };
 
-  const createFile = (data: Match[]) => {
-    const fileName = "matches.json";
-    const blob = new Blob([JSON.stringify({ matches: data }, null, 2)], { type: "application/json" });
-    const href = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = href;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(href);
-  };
-
   return {
     status,
     onDownload: async () => {
@@ -59,10 +59,10 @@ function useMatchesDownloader() {
           const data = await downloadAll();
           setData(data);
         } else if (status === DownloadStatus.Ready && data) {
-          createFile(data)
+          downloadAsCsv(data.map(simplifyMatch))
         }
       } catch (e) {
-        // TODO
+        setStatus(DownloadStatus.Failed)
       }
     },
   };

@@ -32,7 +32,7 @@ Thats it! You are now ready to start with the [tasks](#tasks) or spend some time
 The test is divided in three mandatory tasks and one optional. The whole test is designed to be resolved in around three hours (not including the optional tasks).
 
 - [X] **1.** Technical work: filling the gaps in the auth flow. [Link](./docs/task-01.md)
-- [ ] **2.** Product feature request: download all matches. [Link](./docs/task-02.md)
+- [X] **2.** Product feature request: download all matches. [Link](./docs/task-02.md)
 - [ ] **3.** Pull Request review: showing correct dates. [Link](./docs/task-03.md)
 - [ ] **4.** _(optional)_ Technical work: auth refresh flow. [Link](./docs/task-04.md)
 

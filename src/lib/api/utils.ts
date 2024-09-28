@@ -1,3 +1,4 @@
+import { json2csv } from 'json-2-csv'
 import { Method } from './types'
 
 /**
@@ -82,4 +83,17 @@ function compilePath(pathname: string, params: URLSearchParams): string {
     : resultPathname
 }
 
-export { mergeHeaders, compilePath, parseEndpoint }
+const downloadAsCsv = (data: Record<string, unknown>[]) => {
+  const fileName = "matches.csv";
+  const blob = new Blob([json2csv(data, { expandArrayObjects: true })], { type: "text/plain" });
+  const href = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = href;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(href);
+};
+
+export { mergeHeaders, compilePath, parseEndpoint, downloadAsCsv }
