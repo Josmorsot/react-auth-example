@@ -115,7 +115,7 @@ function AppAuthProvider(props: { children: ReactNode }) {
         typeof value.refresh === "string" &&
         "refreshExpiresAt" in value &&
         typeof value.refreshExpiresAt === "string" &&
-        !hasExpired(value.accessExpiresAt)
+        !hasExpired(value.refreshExpiresAt)
       );
     };
 
