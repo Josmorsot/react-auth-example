@@ -23,7 +23,7 @@ const simplifyMatch = (match: Match) => {
   }
 }
 
-function useMatchesDownloader() {
+export function useMatchesDownloader() {
   const [data, setData] = useState<Match[]>();
   const [status, setStatus] = useState<DownloadStatus>(DownloadStatus.Idle);
   const fetcher = useApiFetcher();
@@ -67,5 +67,3 @@ function useMatchesDownloader() {
     },
   };
 }
-
-export default useMatchesDownloader;

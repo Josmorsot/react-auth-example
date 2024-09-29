@@ -1,5 +1,5 @@
 import { Button } from "@mui/material"
-import useMatchesDownloader, { DownloadStatus } from "./useMatchesDownloader"
+import { DownloadStatus, useMatchesDownloader } from "./useMatchesDownloader"
 
 const DownloadMessage = {
   [DownloadStatus.Idle]: 'Export as CSV',
