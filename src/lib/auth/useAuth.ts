@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Auth } from "./types";
 import { useApiFetcher } from "../api";
 import { useCallback, useEffect } from "react";
