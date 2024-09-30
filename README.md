@@ -66,3 +66,18 @@ Every task has its own **Dos and Don'ts** section; but there are some things tha
 - **[react-router v5](https://v5.reactrouter.com/web/guides/quick-start)**
 - **[react](https://react.dev/reference/react)**
 - **[vite](https://vitejs.dev/guide/)**
+
+## Notes
+### About task #2
+
+#### Batching matches before downloading
+I have extensive experience working with large datasets, and it's crucial to avoid freezing the user interface while a report is being downloaded. In this case, we only have 21 rows, so the dataset is quite small. However, I’m confident that our customers will eventually need to download reports with much larger datasets.
+
+In a real-world platform, it’s advisable to ask users to prepare their report by applying necessary filters before generating it (which, of course, should be handled on the backend). To mimic this behavior, I’ve proposed a two-step download process. In the first step, a job would be run on the backend to prepare the report. Once the report is ready, the backend would notify the frontend, allowing us to display a download button for the user.
+
+
+#### Handling dates
+Until task #3, I wasn’t aware that we had a bug in how dates are displayed in the table. I initially assumed that the current behavior was intentional, and in my opinion, it's actually a good approach to handle dates.
+Let me explain: when a user books something (in this case, a tennis or padel court), they select both a date and a time. These should always be shown in the court's local timezone, not the user's timezone. To achieve this, we have two options: we can either work with timezones and ensure the date and time are displayed correctly, or we can treat the date as a UTC timestamp.
+
+I assumed we were following the second approach. To enhance the user experience when working with the downloaded report, I retrieve the dates (as strings) and strip out the timezone information (in this case, the Z from the UTC format). Once the date is timezone-free, I can create a new Date object with the exact same date and time, but in the user’s timezone. This enables to easily display the date in the user’s local format.
