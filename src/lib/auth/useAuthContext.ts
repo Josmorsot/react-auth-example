@@ -8,6 +8,8 @@ interface AuthContextProps {
   tokens?: TokenSet
   user?: UserData
   onAuthChange: ({ tokens, user}: { tokens:  NonNullable<TokenSet> | null, user: UserData }) => void
+  loginWithCredentials: ({ email, password }: { email: string, password: string }) => Promise<void>
+  logout: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps);
